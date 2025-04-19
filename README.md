@@ -28,7 +28,7 @@ Make sure you have the following installed:
 ### 2. Install Tesseract-OCR (Windows)
 
 Download the installer from:  
-🔗 https://github.com/tesseract-ocr/tesseract/wiki
+https://github.com/tesseract-ocr/tesseract/wiki
 
 Make sure to **add it to your system PATH** during installation.
 
