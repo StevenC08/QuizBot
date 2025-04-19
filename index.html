@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QuizBot</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f8;
+            color: #333;
+            padding: 2rem;
+            max-width: 800px;
+            margin: auto;
+        }
+    
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+    
+        input[type="file"] {
+            display: block;
+            margin: 1rem auto;
+        }
+    
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            margin: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+        }
+    
+        button:hover {
+            background-color: #2980b9;
+        }
+    
+        #outputText, #quizContainer {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 1rem 0;
+            white-space: pre-wrap;
+        }
+    
+        .button-row {
+            text-align: center;
+            margin-top: 1rem;
+        }
+    </style>    
+</head>
+<body>
+    <h1>Upload an Image to Extract Text</h1>
+    <input type="file" id="imageInput">
+    <div class = "button-row">
+        <button onclick="uploadImage()">Extract</button>
+    </div>
+    <pre id="outputText"></pre>
+    <div class = "button-row">
+        <button onclick="generateQuiz()">Generate Quiz</button>
+    </div>
+    <div id="quizContainer"></div>
+    <div class = "button-row">
+        <button onclick="readText('outputText')">🔈 Read Extracted Text</button>
+        <button onclick="readText('quizContainer')">🔈 Read Quiz</button>
+    </div>
+    <div class="button-row">
+        <button onclick="speechSynthesis.cancel()">⏹️ Stop Reading</button>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
