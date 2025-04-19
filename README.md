@@ -10,5 +10,34 @@ A simple web app that lets you:
 
 ---
 
-## 📁 Folder Structure
+
+---
+
+## 🚀 How to Set It Up
+
+### 1. 🧰 Prerequisites
+
+Make sure you have the following installed:
+
+- **Python 3.7+**
+- **pip** (Python package installer)
+- **Tesseract-OCR** (System dependency)
+
+---
+
+### 2. 🖥️ Install Tesseract-OCR (Windows)
+
+Download the installer from:  
+🔗 https://github.com/tesseract-ocr/tesseract/wiki
+
+Make sure to **add it to your system PATH** during installation.
+
+---
+
+### 3. 📦 Install Python Dependencies
+
+In your terminal or VS Code terminal, run:
+
+```bash
+pip install -r requirements.txt
 
