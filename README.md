@@ -13,9 +13,9 @@ A simple web app that lets you:
 
 ---
 
-## 🚀 How to Set It Up
+## How to Set It Up
 
-### 1. 🧰 Prerequisites
+### 1. Prerequisites
 
 Make sure you have the following installed:
 
@@ -25,7 +25,7 @@ Make sure you have the following installed:
 
 ---
 
-### 2. 🖥️ Install Tesseract-OCR (Windows)
+### 2. Install Tesseract-OCR (Windows)
 
 Download the installer from:  
 🔗 https://github.com/tesseract-ocr/tesseract/wiki
@@ -34,7 +34,7 @@ Make sure to **add it to your system PATH** during installation.
 
 ---
 
-### 3. 📦 Install Python Dependencies
+### 3. Install Python Dependencies
 
 In your terminal or VS Code terminal, run:
 
