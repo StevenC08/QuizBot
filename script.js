@@ -1,20 +1,19 @@
-function uploadImage() {
-    const input = document.getElementById('imageInput');
-    const file = input.files[0];
+function extractText() {
+    const input = document.getElementById("imageInput");
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append("image", input.files[0]);
 
-    fetch('/upload', {
-        method: 'POST',
+    fetch("/extract-text", {
+        method: "POST",
         body: formData
     })
     .then(res => res.json())
     .then(data => {
-        if (data.error) {
-            document.getElementById('outputText').innerText = 'Error: ' + data.error;
-        } else {
-            document.getElementById('outputText').innerText = data.text;
-        }
+        document.getElementById("outputText").innerText = data.text || "No text found.";
+    })
+    .catch(err => {
+        document.getElementById("outputText").innerText = "Error extracting text.";
+        console.error(err);
     });
 }
 
@@ -37,8 +36,7 @@ function generateQuiz() {
                 container.innerHTML = "Error: " + data.error;
             }
         } else {
-            const quiz = data.quiz.replace(/\n/g, '<br>');
-            container.innerHTML = quiz;
+            container.innerHTML = data.quiz.replace(/\n/g, "<br>");
         }
     })
     .catch(err => {
@@ -53,8 +51,12 @@ function readText(elementId) {
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-US';
-    utterance.rate = 1;  // Speed (0.1 to 10)
-    utterance.pitch = 1; // Pitch (0 to 2)
-    
+    utterance.rate = 1;
+    utterance.pitch = 1;
+
     speechSynthesis.speak(utterance);
+}
+
+function stopReading() {
+    window.speechSynthesis.cancel();
 }
