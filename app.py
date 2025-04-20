@@ -9,6 +9,8 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+client = OpenAI(api_key = "Your-OpenAI-API-Key")
+
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
@@ -16,22 +18,32 @@ if not os.path.exists(UPLOAD_FOLDER):
 def index():
     return render_template('index.html')
 
-@app.route('/extract-text', methods=['POST'])
-def upload():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image uploaded'}), 400
+@app.route("/extract-text", methods=["POST"])
+def extract_text():
+    if "image" not in request.files:
+        return jsonify({"error": "No image uploaded"}), 400
 
-    file = request.files['image']
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-    file.save(filepath)
+    image = Image.open(request.files["image"])
+    raw_text = pytesseract.image_to_string(image)
 
+    # Send to OpenAI for cleanup
     try:
-        text = pytesseract.image_to_string(Image.open(filepath))
-        return jsonify({'text': text})
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Clean up and format the following OCR output to be more readable and correct any obvious spelling or grammar errors."},
+                {"role": "user", "content": raw_text}
+            ]
+        )
+        cleaned_text = response.choices[0].message.content.strip()
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print("OpenAI Error:", e)
+        cleaned_text = raw_text  # fallback to raw text
 
-client = OpenAI(api_key = "")
+    return jsonify({
+        "raw_text": raw_text,
+        "cleaned_text": cleaned_text
+    })
 
 @app.route('/generate-quiz', methods=['POST'])
 def generate_quiz():
@@ -63,6 +75,35 @@ Answer: [letter]"""
         if "insufficient_quota" in error_msg or "quota" in error_msg:
             return jsonify({'error': 'You have exceeded your OpenAI quota. Please check your usage or billing details at https://platform.openai.com/account/usage'}), 429
         return jsonify({'error': str(e)}), 500
+
+@app.route("/explain-term", methods=["POST"])
+def explain_term():
+    data = request.get_json()
+    term = data.get("term", "").strip()
+
+    if not term:
+        return jsonify({"error": "No term provided"}), 400
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that explains words or phrases in simple terms."
+                },
+                {
+                    "role": "user",
+                    "content": f"What does this mean: '{term}'?"
+                }
+            ]
+        )
+        explanation = response.choices[0].message.content.strip()
+        return jsonify({"explanation": explanation})
+    except Exception as e:
+        print("Error explaining term:", e)
+        return jsonify({"error": "Failed to explain term"}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
