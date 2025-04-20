@@ -119,6 +119,10 @@
         body.dark-mode ::placeholder {
             color: #f1f1f1 !important;
         }
+        .voice-dropdown {
+            max-width: 250px;
+            display: inline-block;
+        }        
     </style>
 </head>
 <body>
@@ -182,15 +186,26 @@
             <!-- Right Column: Ask a Term -->
             <div class="col-md-4">
                 <div id="avatarContainer" class="text-center mb-3">
-                    <img id="avatar" src="/static/avatar_idle.png" alt="Avatar" width="250">
-                </div>                
+                    <img id="avatar" src="/static/avatar_idle.png" alt="Avatar" width="200">
+                </div>
+                <div class="mb-3 text-center">
+                    <label for="voiceSelect" class="form-label me-2">🔈 Voice:</label>
+                    <select id="voiceSelect" class="form-select voice-dropdown" onchange="setSelectedVoice()"></select>
+                </div>               
                 <div class="bg-light border rounded p-3 mt-3">
                 <h5>🔍 Ask About a Term</h5>
-                <input type="text" id="termInput" class="form-control mb-2" placeholder="Enter a word or phrase...">
-                <button onclick="explainTerm()" class="btn btn-info">Ask</button>
-                <button onclick="stopReading()" class="btn btn-outline-danger ms-2">⛔ Stop</button>
-                <div id="termExplanation" class="mt-3 p-2 border rounded bg-white" style="min-height: 80px;"></div>
-            </div>
+                    <input type="text" id="termInput" class="form-control mb-2" placeholder="Enter a word or phrase...">
+                    <button onclick="explainTerm()" class="btn btn-info">Ask QuizBot</button>
+                    <button onclick="stopReading()" class="btn btn-outline-danger ms-2">⛔ Stop</button>
+                    <div id="termExplanation" class="mt-3 p-2 border rounded bg-white" style="min-height: 80px;"></div>
+                </div>
+                <div class="bg-light border rounded p-3 mt-3">
+                    <h5>❓ Ask About the Text</h5>
+                    <input type="text" id="userQuestion" class="form-control mb-2" placeholder="Type your question here...">
+                    <button onclick="askAboutText()" class="btn btn-warning">Ask QuizBot</button>
+                    <button onclick="stopReading()" class="btn btn-outline-danger ms-2">⛔ Stop</button>
+                    <div id="textAnswer" class="mt-3 p-2 border rounded bg-white" style="min-height: 80px;"></div>
+                </div>                
             </div>
         </div>
     </div>
