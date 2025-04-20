@@ -20,12 +20,13 @@ function extractText() {
 function generateQuiz() {
     const extractedText = document.getElementById("outputText").innerText;
     const container = document.getElementById("quizContainer");
+    const gradeLevel = document.getElementById("gradeLevel").value;
     container.innerHTML = "Generating quiz...";
 
     fetch('/generate-quiz', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: extractedText })
+        body: JSON.stringify({ text: extractedText, grade_level: gradeLevel })
     })
     .then(res => res.json())
     .then(data => {
