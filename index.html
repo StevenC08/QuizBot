@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>QuizBot</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #f4f6f8;
@@ -12,7 +12,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: min(95%, 1400px);
             margin: auto;
         }
 
@@ -33,56 +33,163 @@
         .collapse {
             white-space: pre-wrap;
         }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #f1f1f1;
+        }
+
+        body.dark-mode .card {
+            background-color: #1e1e1e;
+            border-color: #333;
+        }
+
+        body.dark-mode .card-header {
+            background-color: #222;
+            color: #f1f1f1;
+        }
+
+        body.dark-mode .btn-outline-dark,
+        body.dark-mode .btn-outline-secondary {
+            color: #f1f1f1;
+            border-color: #555;
+        }
+
+        body.dark-mode input,
+        body.dark-mode textarea,
+        body.dark-mode .form-control {
+            background-color: #2b2b2b;
+            color: #f1f1f1;
+            border-color: #444;
+        }
+
+        body.dark-mode .bg-light {
+            background-color: #1c1c1c !important;
+            color: #f1f1f1;
+        }
+
+        body.dark-mode .bg-white {
+            background-color: #1e1e1e !important;
+            color: #f1f1f1;
+        }
+
+        body.dark-mode .border {
+            border-color: #444 !important;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #f1f1f1;
+        }
+
+        body.dark-mode .card,
+        body.dark-mode .bg-light,
+        body.dark-mode .bg-white,
+        body.dark-mode .card-body {
+            background-color: #1e1e1e !important;
+            color: #f1f1f1 !important;
+        }
+
+        body.dark-mode .card-header {
+            background-color: #2c2c2c !important;
+            color: #f1f1f1 !important;
+        }
+
+        body.dark-mode .form-control,
+        body.dark-mode input,
+        body.dark-mode textarea {
+            background-color: #2b2b2b !important;
+            color: #f1f1f1 !important;
+            border-color: #444;
+        }
+
+        body.dark-mode .border,
+        body.dark-mode .card {
+            border-color: #555 !important;
+        }
+
+        body.dark-mode .text-muted {
+            color: #bbbbbb !important;
+        }
+        
+        body.dark-mode h1 {
+            color: #f1f1f1;
+        }
+        
+        body.dark-mode ::placeholder {
+            color: #f1f1f1 !important;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="text-center mb-4">
-            <h1>🧠 QuizBot</h1>
-            <p class="text-muted">Your interactive online learning assistant!</p>
-        </header>
+    <div class = "container">
+        <div class = "row">
+            <div class = "col-md-8">
+                <!-- Header -->
+                <header class="text-center mb-4">
+                    <h1>🧠 QuizBot</h1>
+                    <button onclick="toggleDarkMode()" class="btn btn-sm btn-outline-dark">🌙 Toggle Dark Mode</button>
+                    <p class="text-muted">Your interactive online learning assistant!</p>
+                </header>
 
-        <!-- Upload -->
-        <div class="mb-3 text-center">
-            <input type="file" id="imageInput" class="form-control">
-            <button onclick="extractText()" class="btn btn-primary mt-2">Extract Text</button>
-        </div>
+                <!-- Upload -->
+                <div class="mb-3 text-center">
+                    <input type="file" id="imageInput" class="form-control">
+                    <button onclick="extractText()" class="btn btn-primary mt-2">Extract Text</button>
+                </div>
 
-        <!-- OCR Output -->
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span>📄 Extracted Text</span>
-                <div>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="readText('outputText')">🔊 Read</button>
-                    <button onclick="stopReading()" class="btn btn-sm btn btn-outline-danger">⛔ Stop Reading</button>
-                    <button class="btn btn-sm btn-outline-dark" data-bs-toggle="collapse" data-bs-target="#outputText">Toggle</button>
+                <!-- OCR Output -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>📄 Extracted Text</span>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="readText('outputText')">🔊 Read</button>
+                            <button onclick="stopReading()" class="btn btn-sm btn btn-outline-danger">⛔ Stop Reading</button>
+                            <button class="btn btn-sm btn-outline-dark" data-bs-toggle="collapse" data-bs-target="#outputText">Toggle</button>
+                        </div>
+                    </div>
+                    <div id="outputText" class="card-body collapse show"></div>
+                </div>
+
+                <!-- Generate Quiz -->
+                <div class="text-center">
+                    <button onclick="generateQuiz()" class="btn btn-success">Generate Quiz</button>
+                </div>
+
+                <!-- Quiz Output -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>📝 Quiz</span>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="readText('quizContainer')">🔊 Read</button>
+                            <button onclick="stopReading()" class="btn btn-sm btn btn-outline-danger">⛔ Stop Reading</button>
+                            <button class="btn btn-sm btn-outline-dark" data-bs-toggle="collapse" data-bs-target="#quizContainer">Toggle</button>
+                        </div>
+                    </div>
+                    <div id="quizContainer" class="card-body collapse show"></div>
                 </div>
             </div>
-            <div id="outputText" class="card-body collapse show"></div>
-        </div>
 
-        <!-- Generate Quiz -->
-        <div class="text-center">
-            <button onclick="generateQuiz()" class="btn btn-success">Generate Quiz</button>
-        </div>
-
-        <!-- Quiz Output -->
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span>📝 Quiz</span>
-                <div>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="readText('quizContainer')">🔊 Read</button>
-                    <button onclick="stopReading()" class="btn btn-sm btn btn-outline-danger">⛔ Stop Reading</button>
-                    <button class="btn btn-sm btn-outline-dark" data-bs-toggle="collapse" data-bs-target="#quizContainer">Toggle</button>
-                </div>
+            <!-- Right Column: Ask a Term -->
+            <div class="col-md-4">
+                <div id="avatarContainer" class="text-center mb-3">
+                    <img id="avatar" src="/static/avatar_idle.png" alt="Avatar" width="250">
+                </div>                
+                <div class="bg-light border rounded p-3 mt-3">
+                <h5>🔍 Ask About a Term</h5>
+                <input type="text" id="termInput" class="form-control mb-2" placeholder="Enter a word or phrase...">
+                <button onclick="explainTerm()" class="btn btn-info">Ask</button>
+                <button onclick="stopReading()" class="btn btn-outline-danger ms-2">⛔ Stop</button>
+                <div id="termExplanation" class="mt-3 p-2 border rounded bg-white" style="min-height: 80px;"></div>
             </div>
-            <div id="quizContainer" class="card-body collapse show"></div>
+            </div>
         </div>
     </div>
 
+    
+
     <!-- Bootstrap & script -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/static/script.js"></script>
 </body>
 </html>
