@@ -16,7 +16,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 def index():
     return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
+@app.route('/extract-text', methods=['POST'])
 def upload():
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded'}), 400
@@ -31,7 +31,7 @@ def upload():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-client = OpenAI(api_key = "Your-OpenAI-API-Key")
+client = OpenAI(api_key = "")
 
 @app.route('/generate-quiz', methods=['POST'])
 def generate_quiz():
