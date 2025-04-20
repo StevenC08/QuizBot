@@ -112,6 +112,34 @@ def explain_term():
         print("Error explaining term:", e)
         return jsonify({"error": "Failed to explain term"}), 500
 
+@app.route("/ask-text", methods=["POST"])
+def ask_text():
+    data = request.get_json()
+    question = data.get("question", "")
+    context = data.get("context", "")
+
+    if not question or not context:
+        return jsonify({"error": "Missing question or context"}), 400
+
+    prompt = f"""You are a helpful assistant. Based on the following article or passage, answer the user's question in a clear and simple way.
+
+Passage:
+{context}
+
+Question: {question}
+"""
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        answer = response.choices[0].message.content.strip()
+        return jsonify({"answer": answer})
+    except Exception as e:
+        print("Error answering text question:", e)
+        return jsonify({"error": "Failed to get an answer."}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
