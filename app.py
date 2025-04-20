@@ -49,14 +49,22 @@ def extract_text():
 def generate_quiz():
     data = request.get_json()
     raw_text = data.get('text', '')
+    grade_level = data.get("grade_level", "8")
 
-    prompt = f"""Generate 5 multiple choice quiz questions based on this text:\n\n{raw_text}\n\nFormat each as:
-Question: ...
+    if not raw_text:
+        return jsonify({"error": "No text provided"}), 400
+
+    prompt = f"""Generate 5 multiple-choice trivia questions based on the following text, written for a {grade_level} grade reading level. 
+Each question should have 4 answer options and indicate the correct answer clearly in the format:
+Q: ...
 A. ...
 B. ...
 C. ...
 D. ...
-Answer: [letter]"""
+Answer: ...
+    
+Text: {raw_text}
+"""
 
     try:
         response = client.chat.completions.create(
