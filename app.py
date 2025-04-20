@@ -31,7 +31,7 @@ def extract_text():
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "Clean up and format the following OCR output to be more readable and correct any obvious spelling or grammar errors."},
+                {"role": "system", "content": "Clean up and format the following OCR output to be more readable and correct any obvious spelling or grammar errors. Please do not format the text into bullet points."},
                 {"role": "user", "content": raw_text}
             ]
         )
