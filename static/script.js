@@ -1,3 +1,7 @@
+let synth = window.speechSynthesis;
+let utterance;
+let selectedVoice = null;
+
 function extractText() {
     const input = document.getElementById("imageInput");
     const formData = new FormData();
@@ -37,23 +41,38 @@ function generateQuiz() {
                 container.innerHTML = "Error: " + data.error;
             }
         } else {
-            container.innerHTML = data.quiz.replace(/\n/g, "<br>");
+            const quizText = data.quiz;
+            
+            const lines = quizText.split('\n');
+            const questions = [];
+            const answers = [];
+    
+            lines.forEach(line => {
+                if (line.trim().toLowerCase().startsWith('answer')) {
+                    // Remove "Answer:" prefix and trim
+                    const cleanAnswer = line.replace(/^answer\s*[:\-]?\s*/i, '');
+                    answers.push(cleanAnswer);
+                } else {
+                    questions.push(line);
+                }
+            });
+    
+            const questionHTML = questions.join('<br>');
+            const answerHTML = `<br><br><strong>Answers:</strong><br>` + answers.join('<br>');
+    
+            container.innerHTML = questionHTML + answerHTML;
         }
     })
-    .catch(err => {
-        container.innerHTML = "Failed to generate quiz.";
-        console.error(err);
-    });
 }
-
-let synth = window.speechSynthesis;
-let utterance;
 
 function readText(elementId) {
     const text = document.getElementById(elementId).innerText;
     if (!text) return;
 
-    utterance = new SpeechSynthesisUtterance(text);
+    const utterance = new SpeechSynthesisUtterance(text);
+    if (selectedVoice) {
+        utterance.voice = selectedVoice;
+    }
 
     // When speaking starts
     utterance.onstart = () => {
@@ -95,6 +114,9 @@ function explainTerm() {
         if (data && data.explanation) {
             outputDiv.innerText = data.explanation;
             const utterance = new SpeechSynthesisUtterance(data.explanation);
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
             // When speaking starts
             utterance.onstart = () => {
                 document.getElementById("avatar").src = "/static/avatar_speaking.gif";
@@ -132,6 +154,9 @@ function askAboutText() {
     .then(data => {
         document.getElementById("textAnswer").innerText = data.answer || "No answer found.";
         const utterance = new SpeechSynthesisUtterance(data.answer);
+        if (selectedVoice) {
+            utterance.voice = selectedVoice;
+        }
         // When speaking starts
         utterance.onstart = () => {
             document.getElementById("avatar").src = "/static/avatar_speaking.gif";
@@ -147,8 +172,6 @@ function askAboutText() {
         console.error(err);
     });
 }
-
-let selectedVoice = null;
 
 // Populate voice dropdown
 function populateVoices() {
@@ -172,23 +195,6 @@ function setSelectedVoice() {
     const voices = speechSynthesis.getVoices();
     const selectedIndex = document.getElementById("voiceSelect").value;
     selectedVoice = voices[selectedIndex];
-}
-
-// Update readText function
-function readText(elementId) {
-    const text = document.getElementById(elementId).innerText;
-    if (!text) return;
-
-    speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    if (selectedVoice) {
-        utterance.voice = selectedVoice;
-    }
-    speechSynthesis.speak(utterance);
-}
-
-function stopReading() {
-    speechSynthesis.cancel();
 }
 
 // Voices may load asynchronously
