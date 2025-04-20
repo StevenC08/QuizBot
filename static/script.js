@@ -118,3 +118,78 @@ function explainTerm() {
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
 }
+
+function askAboutText() {
+    const question = document.getElementById("userQuestion").value;
+    const context = document.getElementById("outputText").innerText;
+
+    fetch("/ask-text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question, context })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("textAnswer").innerText = data.answer || "No answer found.";
+        const utterance = new SpeechSynthesisUtterance(data.answer);
+        // When speaking starts
+        utterance.onstart = () => {
+            document.getElementById("avatar").src = "/static/avatar_speaking.gif";
+        };
+        // When speaking ends
+        utterance.onend = () => {
+            document.getElementById("avatar").src = "/static/avatar_idle.png";
+        };
+        window.speechSynthesis.speak(utterance);
+    })
+    .catch(err => {
+        document.getElementById("textAnswer").innerText = "Error asking question.";
+        console.error(err);
+    });
+}
+
+let selectedVoice = null;
+
+// Populate voice dropdown
+function populateVoices() {
+    const voices = speechSynthesis.getVoices();
+    const voiceSelect = document.getElementById("voiceSelect");
+
+    // Clear and repopulate
+    voiceSelect.innerHTML = "";
+    voices.forEach((voice, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = `${voice.name} (${voice.lang})`;
+        voiceSelect.appendChild(option);
+    });
+
+    selectedVoice = voices[0]; // Default voice
+}
+
+// Set selected voice
+function setSelectedVoice() {
+    const voices = speechSynthesis.getVoices();
+    const selectedIndex = document.getElementById("voiceSelect").value;
+    selectedVoice = voices[selectedIndex];
+}
+
+// Update readText function
+function readText(elementId) {
+    const text = document.getElementById(elementId).innerText;
+    if (!text) return;
+
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    if (selectedVoice) {
+        utterance.voice = selectedVoice;
+    }
+    speechSynthesis.speak(utterance);
+}
+
+function stopReading() {
+    speechSynthesis.cancel();
+}
+
+// Voices may load asynchronously
+window.speechSynthesis.onvoiceschanged = populateVoices;
