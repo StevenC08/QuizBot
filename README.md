@@ -54,13 +54,7 @@ pip install flask pytesseract openai Pillow
 
 You can get a key at: https://platform.openai.com/account/api-keys
 
-Add this to your terminal before running:
-
-```bash
-set OPENAI_API_KEY=your_key_here   # Windows
-
-export OPENAI_API_KEY=your_key_here   # For Mac/Linux
-```
+Paste it in for the "Your-OpenAI-API-Key" in the row with client in it, be careful with permissions since unwanted people could find your OpenAI API Key
 
 ---
 
