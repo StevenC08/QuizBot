@@ -47,3 +47,27 @@ If requirements.txt is missing, install manually:
 ```bash
 pip install flask pytesseract openai Pillow
 ```
+
+---
+
+### 4. Set Your OpenAI API Key
+
+You can get a key at: https://platform.openai.com/account/api-keys
+
+Add this to your terminal before running:
+
+```bash
+set OPENAI_API_KEY=your_key_here   # Windows
+
+export OPENAI_API_KEY=your_key_here   # For Mac/Linux
+```
+
+---
+
+### 5. Run the App
+
+```bash
+python app.py
+```
+
+Then open your browser and go to: http://127.0.0.1:5000/
