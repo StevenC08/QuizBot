@@ -40,4 +40,10 @@ In your terminal or VS Code terminal, run:
 
 ```bash
 pip install -r requirements.txt
+```
 
+If requirements.txt is missing, install manually:
+
+```bash
+pip install flask pytesseract openai Pillow
+```
